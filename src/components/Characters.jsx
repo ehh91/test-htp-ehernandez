@@ -23,7 +23,6 @@ export default function Characters() {
     const [species, setSpecies] = useState('')
     const [type, setType] = useState('')
     const [gender, setGender] = useState('')
-    const [page, setPage] = useState('&page=1')
     const [sendByEmail, dispatch] = useReducer(favoriteReducer, initialState)
 
     let apiURL = "https://rickandmortyapi.com/api/character/"
@@ -64,10 +63,11 @@ export default function Characters() {
             }
         }
         if (customQuery !== null) {
-            apiURL = apiURL + customQuery 
-        } 
+            apiURL = apiURL + customQuery
+        }
         getCharacters()
         console.log(apiURL);
+        customQuery = null
     }
 
     const getCharacters = async () => {
@@ -92,8 +92,14 @@ export default function Characters() {
 
     const clear = (e) => {
         e.preventDefault()
-        document.getElementById("filter").reset();
         getCharacters()
+        setName('')
+        setStatus('')
+        setType('')
+        setSpecies('')
+        setGender('')
+        document.getElementById("filter").reset();
+
     }
 
     // console.log(sendByEmail);
@@ -101,7 +107,7 @@ export default function Characters() {
     return (
         <div style={{ display: 'flex' }}>
             <div>
-                <form id="filter" style={{ display: "inline-grid", paddingTop: "40%" }}>
+                <form id="filter" style={{ display: "inline-grid", paddingTop: "40%", marginLeft: "15%" }}>
                     <label htmlFor="">Name</label>
                     <input name="name" type="text" placeholder="name" onChange={(e) => setName(e.target.value)} />
                     <br />
@@ -138,19 +144,12 @@ export default function Characters() {
                 characters != undefined ?
                     (
                         <div style={{ width: "100%" }}>
-                            <table style={{ paddingLeft: "80%" }}>
+                            <ul style={{ position: "absolute", left: "0%", top: "75%", width: "10%" }}> Send by Email
                                 {sendByEmail.sendByEmail.map(array => (
-
-                                    <tbody>
-                                        <tr key={array.id}>
-                                            <li >{array.name}</li>
-                                        </tr>
-                                    </tbody>
-
-
-                                ))
+                                <li key={array.id} >{array.name}</li>
+                            ))
                                 }
-                            </table>
+                            </ul>
                             {
                                 sendByEmail.sendByEmail.trim ?
                                     (
@@ -185,7 +184,9 @@ export default function Characters() {
                     )
                     :
                     (
-                        <h1>No hay datos con los filtros ingresados</h1>
+                        <div style={{ height: "100vh" }}>
+                            <h1>No hay datos con los filtros ingresados</h1>
+                        </div>
                     )
             }
 
